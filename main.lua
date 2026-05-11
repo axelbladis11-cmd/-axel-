@@ -30,14 +30,22 @@ Tab:AddSection({
 })
 
 Tab:AddToggle({
-    Name = "Anti-Bag ($$ AXEL $$)",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiBag = Value
-        if Value then
+	Name = "Anti-Bag ($$ AXEL $$)",
+	Default = false,
+	Callback = function(Value)
+		_G.AntiBag = Value
+        
+        if _G.AntiBag then
+            -- Notificación rápida para saber que el click funcionó
+            OrionLib:MakeNotification({
+                Name = "$$ AXEL $$",
+                Content = "SISTEMA ACTIVO",
+                Time = 2
+            })
+            
+            -- El bucle de protección
             task.spawn(function()
                 while _G.AntiBag do
-                    task.wait(0.1)
                     local char = game.Players.LocalPlayer.Character
                     if char then
                         for _, v in pairs(char:GetChildren()) do
@@ -46,10 +54,17 @@ Tab:AddToggle({
                             end
                         end
                     end
+                    task.wait(0.1)
                 end
             end)
+        else
+            OrionLib:MakeNotification({
+                Name = "$$ AXEL $$",
+                Content = "SISTEMA DESACTIVADO",
+                Time = 2
+            })
         end
-    end    
+	end    
 })
 
 OrionLib:Init()
