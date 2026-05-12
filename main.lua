@@ -3,7 +3,7 @@ local player = game.Players.LocalPlayer
 local pgui = player:WaitForChild("PlayerGui")
 local uis = game:GetService("UserInputService")
 
--- Eliminar GUI si ya existe para evitar duplicados
+-- Eliminar GUI si ya existe
 if pgui:FindFirstChild("RatonHub") then pgui.RatonHub:Destroy() end
 
 -- Crear la Pantalla
@@ -11,15 +11,15 @@ local sg = Instance.new("ScreenGui", pgui)
 sg.Name = "RatonHub"
 sg.ResetOnSpawn = false
 
--- El Cuadrado Principal (Marco)
+-- Marco Principal
 local frame = Instance.new("Frame", sg)
-frame.Size = UIDimensions.new(0, 220, 0, 150)
+frame.Size = UDim2.new(0, 220, 0, 150)
 frame.Position = UDim2.new(0.5, -110, 0.2, 0)
-frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- Fondo oscuro
+frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 frame.BorderSizePixel = 2
-frame.BorderColor3 = Color3.fromRGB(255, 215, 0) -- Borde Amarillo Oro
+frame.BorderColor3 = Color3.fromRGB(255, 215, 0) -- Amarillo
 frame.Active = true
-frame.Draggable = true -- Para que puedas moverlo con el mouse
+frame.Draggable = true
 
 -- Título
 local title = Instance.new("TextLabel", frame)
@@ -30,22 +30,22 @@ title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
 title.TextSize = 16
 
--- El Botón de Estado (ON/OFF)
+-- El Botón de Estado
 local statusButton = Instance.new("TextButton", frame)
 statusButton.Size = UDim2.new(0.8, 0, 0, 50)
 statusButton.Position = UDim2.new(0.1, 0, 0.45, 0)
-statusButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+statusButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 statusButton.Text = "OFF"
-statusButton.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo al inicio
+statusButton.TextColor3 = Color3.fromRGB(255, 0, 0)
 statusButton.Font = Enum.Font.GothamBlack
 statusButton.TextSize = 30
-statusButton.BorderSizePixel = 0
+statusButton.BorderSizePixel = 1
+statusButton.BorderColor3 = Color3.fromRGB(255, 0, 0)
 
--- Esquinas redondeadas
 local corner = Instance.new("UICorner", statusButton)
-corner.CornerRadius = Tool.new(0, 8)
+corner.CornerRadius = UDim.new(0, 8)
 
--- Lógica del Anti-Bag y la tecla J
+-- Lógica
 _G.AntiBagRaton = false
 
 local function ToggleRaton()
@@ -53,10 +53,9 @@ local function ToggleRaton()
     
     if _G.AntiBagRaton then
         statusButton.Text = "ON"
-        statusButton.TextColor3 = Color3.fromRGB(0, 255, 0) -- Verde
+        statusButton.TextColor3 = Color3.fromRGB(0, 255, 0)
         statusButton.BorderColor3 = Color3.fromRGB(0, 255, 0)
         
-        -- El bucle del Anti-Bag
         task.spawn(function()
             while _G.AntiBagRaton do
                 local char = player.Character
@@ -72,16 +71,16 @@ local function ToggleRaton()
         end)
     else
         statusButton.Text = "OFF"
-        statusButton.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo
+        statusButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+        statusButton.BorderColor3 = Color3.fromRGB(255, 0, 0)
     end
 end
 
--- Detectar Tecla J
+-- Tecla J
 uis.InputBegan:Connect(function(input, processed)
     if not processed and input.KeyCode == Enum.KeyCode.J then
         ToggleRaton()
     end
 end)
 
--- También funciona si le das click al botón directamente
 statusButton.MouseButton1Click:Connect(ToggleRaton)
