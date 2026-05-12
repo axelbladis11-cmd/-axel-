@@ -1,38 +1,65 @@
--- [[ $$ AXEL $$ HUB EXCLUSIVE ]]
--- Verificación rápida
-if not identifyexecutor():find("Xeno") then
-    game.Players.LocalPlayer:Kick("$$ AXEL $$ HUB: Usa Xeno.")
-    return
-end
+-- [[ $$ RATON KING OF HVH $$ ]]
+local player = game.Players.LocalPlayer
+local pgui = player:WaitForChild("PlayerGui")
+local uis = game:GetService("UserInputService")
 
-local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Orion/main/source'))()
-local Window = OrionLib:MakeWindow({
-    Name = "$$ AXEL $$ HUB", 
-    HidePremium = false, 
-    SaveConfig = false, 
-    IntroText = "$$ AXEL $$"
-})
+-- Eliminar GUI si ya existe para evitar duplicados
+if pgui:FindFirstChild("RatonHub") then pgui.RatonHub:Destroy() end
 
--- Variables de estado
-_G.AntiBagAxel = false
-local UserInputService = game:GetService("UserInputService")
+-- Crear la Pantalla
+local sg = Instance.new("ScreenGui", pgui)
+sg.Name = "RatonHub"
+sg.ResetOnSpawn = false
 
--- Pestaña Principal
-local Tab = Window:MakeTab({
-    Name = "Axel $$",
-    Icon = "rbxassetid://4483345906",
-    PremiumOnly = false
-})
+-- El Cuadrado Principal (Marco)
+local frame = Instance.new("Frame", sg)
+frame.Size = UIDimensions.new(0, 220, 0, 150)
+frame.Position = UDim2.new(0.5, -110, 0.2, 0)
+frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- Fondo oscuro
+frame.BorderSizePixel = 2
+frame.BorderColor3 = Color3.fromRGB(255, 215, 0) -- Borde Amarillo Oro
+frame.Active = true
+frame.Draggable = true -- Para que puedas moverlo con el mouse
 
--- Función de protección (Mejorada para no dar Lag)
-local function ToggleProtection()
-    _G.AntiBagAxel = not _G.AntiBagAxel
+-- Título
+local title = Instance.new("TextLabel", frame)
+title.Text = "$$ RATON KING OF HVH $$"
+title.Size = UDim2.new(1, 0, 0, 40)
+title.TextColor3 = Color3.fromRGB(255, 215, 0)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+
+-- El Botón de Estado (ON/OFF)
+local statusButton = Instance.new("TextButton", frame)
+statusButton.Size = UDim2.new(0.8, 0, 0, 50)
+statusButton.Position = UDim2.new(0.1, 0, 0.45, 0)
+statusButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+statusButton.Text = "OFF"
+statusButton.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo al inicio
+statusButton.Font = Enum.Font.GothamBlack
+statusButton.TextSize = 30
+statusButton.BorderSizePixel = 0
+
+-- Esquinas redondeadas
+local corner = Instance.new("UICorner", statusButton)
+corner.CornerRadius = Tool.new(0, 8)
+
+-- Lógica del Anti-Bag y la tecla J
+_G.AntiBagRaton = false
+
+local function ToggleRaton()
+    _G.AntiBagRaton = not _G.AntiBagRaton
     
-    if _G.AntiBagAxel then
-        OrionLib:MakeNotification({Name = "$$ AXEL $$", Content = "Anti-Bag: ACTIVADO", Time = 2})
+    if _G.AntiBagRaton then
+        statusButton.Text = "ON"
+        statusButton.TextColor3 = Color3.fromRGB(0, 255, 0) -- Verde
+        statusButton.BorderColor3 = Color3.fromRGB(0, 255, 0)
+        
+        -- El bucle del Anti-Bag
         task.spawn(function()
-            while _G.AntiBagAxel do
-                local char = game.Players.LocalPlayer.Character
+            while _G.AntiBagRaton do
+                local char = player.Character
                 if char then
                     for _, v in ipairs(char:GetChildren()) do
                         if v.Name:lower():find("bag") or v.Name == "Grip" then 
@@ -40,39 +67,21 @@ local function ToggleProtection()
                         end
                     end
                 end
-                task.wait(0.2) -- Un poco más de espera para evitar crasheos
+                task.wait(0.1)
             end
         end)
     else
-        OrionLib:MakeNotification({Name = "$$ AXEL $$", Content = "Anti-Bag: DESACTIVADO", Time = 2})
+        statusButton.Text = "OFF"
+        statusButton.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo
     end
 end
 
--- Botón en el menú por si no quieres usar la tecla
-Tab:AddToggle({
-	Name = "Anti-Bag ($$ AXEL $$)",
-	Default = false,
-	Callback = function(Value)
-        if _G.AntiBagAxel ~= Value then
-		    ToggleProtection()
-        end
-	end    
-})
-
--- Botón para cerrar que SI funciona
-Tab:AddButton({
-	Name = "Cerrar y Limpiar Hub",
-	Callback = function()
-        _G.AntiBagAxel = false -- Apaga todo antes de cerrar
-        OrionLib:Destroy()
-	end    
-})
-
--- SISTEMA DE TECLA J (Independiente del GUI para que no crashee)
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed and input.KeyCode == Enum.KeyCode.J then
-        ToggleProtection()
+-- Detectar Tecla J
+uis.InputBegan:Connect(function(input, processed)
+    if not processed and input.KeyCode == Enum.KeyCode.J then
+        ToggleRaton()
     end
 end)
 
-OrionLib:Init()
+-- También funciona si le das click al botón directamente
+statusButton.MouseButton1Click:Connect(ToggleRaton)
