@@ -1,16 +1,16 @@
--- [[ $$ RATON KING OF HVH $$ ]]
+-- [[$$ Raton King Of HvH$$ ]]
 local player = game.Players.LocalPlayer
 local pgui = player:WaitForChild("PlayerGui")
 local uis = game:GetService("UserInputService")
 
 -- Limpiar versiones anteriores para que no se amontonen
-if pgui:FindFirstChild("RatonHub") then 
-    pgui.RatonHub:Destroy() 
+if pgui:FindFirstChild("RatonKingOfHvH") then 
+    pgui.RatonKingOfHvH:Destroy() 
 end
 
 -- Crear la interfaz base
 local sg = Instance.new("ScreenGui")
-sg.Name = "RatonHub"
+sg.Name = "RatonKingOfHvH"
 sg.Parent = pgui
 sg.ResetOnSpawn = false
 
@@ -27,7 +27,7 @@ frame.Parent = sg
 
 -- Título
 local title = Instance.new("TextLabel")
-title.Text = "$$ RATON KING OF HVH $$"
+title.Text = "RatonKingOfHvH"
 title.Size = UDim2.new(1, 0, 0, 45)
 title.TextColor3 = Color3.fromRGB(255, 230, 0)
 title.BackgroundTransparency = 1
