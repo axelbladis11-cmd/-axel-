@@ -10,7 +10,7 @@ end
 
 -- Crear la interfaz base
 local sg = Instance.new("ScreenGui")
-sg.Name = "RatonKingOfHvH"
+sg.Name = "RatOfKingOfHvH"
 sg.Parent = pgui
 sg.ResetOnSpawn = false
 
